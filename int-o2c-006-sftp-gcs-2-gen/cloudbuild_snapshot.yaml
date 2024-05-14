@@ -1,0 +1,23 @@
+steps: 
+- name: gcr.io/$PROJECT_ID/zip:tag1
+  args: ['-r9T', 'int-o2c-006-sftp-gcs-2-gen-$BRANCH_NAME.zip', '.', '-x *node_modules*']  
+  dir: 'cloud-functions-2-gen/interface-specific/int-o2c-006-sftp-gcs-2-gen/src'
+
+
+
+#Move zip to artifactory
+- name: gcr.io/cloud-builders/gcloud
+  entrypoint: 'bash'
+  args: ['-c', 'curl -u $$ARTIFACTORY_CREDENTIALS -X PUT "https://artifactory.build.ingka.ikea.com/artifactory/$_ARTIFACTORY_REPO/$_PACKAGE_NAME/int-o2c-006-sftp-gcs-2-gen-$BRANCH_NAME.zip" -T int-o2c-006-sftp-gcs-2-gen-$BRANCH_NAME.zip']
+  dir: 'cloud-functions-2-gen/interface-specific/int-o2c-006-sftp-gcs-2-gen/src'
+  secretEnv: ['ARTIFACTORY_CREDENTIALS']
+  
+  
+secrets:
+- kmsKeyName: projects/ingka-dpfwcbt-snapshot-dev/locations/global/keyRings/ingka-dpfwcbt-artifactory/cryptoKeys/ingka-dpfwcbt-artifactory
+  secretEnv:
+    ARTIFACTORY_CREDENTIALS: CiQA89v7t2qK5h7MbIfVGUGDJhjceQtB3KJRJ5SsTV0G5YNavoISoQcAEqR2Ve+2u8NC0t2SFfHTQya6/ESvMfA0xDmtIWXoXrQGn9ZfdxmJdyMnWpMshjGXDvZPWS9g58OdqTez6UeLNfqXqhqL//olQXlwIpm1S4titgQo6PQ6tdwZ7+NHbSYWmIXaQEM7S7+OIFcAduLhWpTt45lyndwBZF01i8++EoIM0moEwglNJcEnJKWAJa8j8JsJCep0RS84SzH15gR5reUeGXwkrGr0Tfi5oXRYQ9B04oLQwcc75QYwXd9K9v7VXdS5IloDbrdZIxNwK9Hi/611rifcXmnuoluJJLqiy1U+HsIVQ1CTelgCwOUt5cJIL2MkQHZyhLXK5yn4VRH3kxYUgO25fJbuoN72+a5Q9eeEoLTd9F7aneXp0j4YWOGxVHPX1ujgCpiCqCPvPDc4x6zSRJwrisslHNiNtFLZSOFQDsNQox9Ou3xYmnKcSx9odmRBj9mfbndKUGpJXesnOpTI9oLhNIEACqj6HjL6dVAV2HfRiUygBtJH9W00o6063VMLbT6l+ATayO3ZSI2coiAlCBxKidK5C5WtrphCoNWNXSdd4i6VFZt0lXrQu+lKJzoUiuI5DEIfQHuNmvy2k+QZCNqpS4XiaSNlZu3Znz+oOztaNDOkqvr8T7vTu9jS+K5x5WsEMN/oYxPVbw9okH1JouvSxtZVBdzkY4CHnQKWlJaIyXN5bJZyvBPVSdGA2L8EWvGC1hI6PMpojdgnn/0CEXmkfr7VPyl50e9aJ86eNsCNxbnDuUDkU35x7GcMGgEA4i1Qv3tRW79f4FV63Mc0N3sIx+oH+YbGkhYxRKgNm1ZSqlwSOfW5+tk18yj7VE8ph2Tie5jsSL5ACS0w0Q1HBRR5CmvfISYWJ9A2JE/wbY2BWW3eaWGXsEQEVNXYT6wGTsvzuRvSFPvCfiEaJi/dxOOGz1cVN8Ko8eoiZX6T+3/pCeEwUOLHqLSr5n9q9d9apWqHZjy+kRzlhzIcfJiC6AOppn602raviXpivKSmL9bv3JrHunHVIu6Jsh8pVRM7mTO9rqTrPeV0QYPDpQqsrK44KKO3z8vKQ+HMfFg7Gy4vs6nxYwtC5qNwB9JKZ8C5wJ9gjVIz+MIucZotbhuyASf0HgeZVzz1nNwrX2vylm43NK6aqfgKVMKq7KWVzky9ryjCk8MOE98mq/erwu8VGW7T9kzS8PGiSvtI8Bs3mfA6dAFUOzee3ZKD/nzoC35FKcwPZweKL+Fj3MyqQg==
+    
+substitutions:
+  _ARTIFACTORY_REPO: 'dpfw-cbt-templates-generic-snapshot-local'
+  _PACKAGE_NAME: 'com.dpfw.cbt.cloudfunction'
